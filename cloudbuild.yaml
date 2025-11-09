@@ -23,8 +23,8 @@ steps:
       [
         'set',
         'image',
-        'deployment/nextjs-frontend',
-        'nextjs-frontend=asia-southeast1-docker.pkg.dev/$PROJECT_ID/next-app-docker/next-frontend:$COMMIT_SHA'
+        'deployment/nextjs-app-project',
+        'nextjs-app-project=asia-southeast1-docker.pkg.dev/$PROJECT_ID/next-app-docker/next-frontend:$COMMIT_SHA'
       ]
     env:
       - 'CLOUDSDK_COMPUTE_REGION=asia-southeast1'
