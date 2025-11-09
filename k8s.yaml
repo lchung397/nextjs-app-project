@@ -4,21 +4,21 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: nextjs-frontend
+  name: nextjs-app-project
   labels:
-    app: nextjs-frontend
+    app: nextjs-app-project
 spec:
   replicas: 2
   selector:
     matchLabels:
-      app: nextjs-frontend
+      app: nextjs-app-project
   template:
     metadata:
       labels:
-        app: nextjs-frontend
+        app: nextjs-app-project
     spec:
       containers:
-        - name: nextjs-frontend
+        - name: nextjs-app-project
           image: asia-southeast1-docker.pkg.dev/deploy-next-app/next-app-docker/web-frontend:latest
           ports:
             - containerPort: 3000
@@ -50,13 +50,13 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: nextjs-frontend-svc
+  name: nextjs-app-project-svc
   annotations:
     cloud.google.com/neg: '{"ingress": true}'
 spec:
   type: ClusterIP
   selector:
-    app: nextjs-frontend
+    app: nextjs-app-project
   ports:
     - name: http
       port: 80
@@ -70,7 +70,7 @@ spec:
 apiVersion: networking.gke.io/v1
 kind: ManagedCertificate
 metadata:
-  name: nextjs-frontend-cert
+  name: nextjs-app-project-cert
 spec:
   domains:
     - your-domain.com
@@ -84,10 +84,10 @@ spec:
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: nextjs-frontend-ing
+  name: nextjs-app-project-ing
   annotations:
     kubernetes.io/ingress.class: "gce"
-    networking.gke.io/managed-certificates: "nextjs-frontend-cert"
+    networking.gke.io/managed-certificates: "nextjs-app-project-cert"
 spec:
   rules:
     - host: your-domain.com
@@ -97,6 +97,6 @@ spec:
             pathType: Prefix
             backend:
               service:
-                name: nextjs-frontend-svc
+                name: nextjs-app-project-svc
                 port:
                   number: 80
