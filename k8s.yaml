@@ -67,14 +67,20 @@ spec:
 # =========================
 # ManagedCertificate: HTTPS cho domain
 # =========================
-apiVersion: networking.gke.io/v1
-kind: ManagedCertificate
+apiVersion: v1
+kind: Service
 metadata:
-  name: nextjs-app-project-cert
+  name: nextjs-app-project-svc
+  annotations:
+    cloud.google.com/neg: '{"ingress": true}'
 spec:
-  domains:
-    - your-domain.com
-    - www.your-domain.com
+  type: LoadBalancer
+  selector:
+    app: nextjs-app-project
+  ports:
+    - name: http
+      port: 80
+      targetPort: 3000
 
 ---
 
@@ -89,9 +95,14 @@ metadata:
     kubernetes.io/ingress.class: "gce"
     networking.gke.io/managed-certificates: "nextjs-app-project-cert"
 spec:
-  type: LoadBalancer   # 👈 sửa dòng này
-  selector:
-    app: nextjs-app-project
-  ports:
-    - port: 80
-      targetPort: 3000
+  rules:
+    - host: your-domain.com
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: nextjs-app-project-svc
+                port:
+                  number: 80
