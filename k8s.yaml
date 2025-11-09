@@ -19,7 +19,7 @@ spec:
     spec:
       containers:
         - name: nextjs-app-project
-          image: asia-southeast1-docker.pkg.dev/deploy-next-app/next-app-docker/web-frontend:latest
+          image: asia-southeast1-docker.pkg.dev/deploy-next-app/next-app-docker/abc-image:latest
           ports:
             - containerPort: 3000
           env:
