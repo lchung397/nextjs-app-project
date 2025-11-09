@@ -89,14 +89,9 @@ metadata:
     kubernetes.io/ingress.class: "gce"
     networking.gke.io/managed-certificates: "nextjs-app-project-cert"
 spec:
-  rules:
-    - host: your-domain.com
-      http:
-        paths:
-          - path: /
-            pathType: Prefix
-            backend:
-              service:
-                name: nextjs-app-project-svc
-                port:
-                  number: 80
+  type: LoadBalancer   # 👈 sửa dòng này
+  selector:
+    app: nextjs-app-project
+  ports:
+    - port: 80
+      targetPort: 3000
