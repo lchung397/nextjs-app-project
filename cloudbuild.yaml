@@ -1,37 +1,42 @@
 steps:
-  # Step 1: Build Docker image
+  # 1. Build Docker image cho Next.js
   - name: 'gcr.io/cloud-builders/docker'
     args:
       [
         'build',
-        '-t', 'asia-southeast1-docker.pkg.dev/deploy-next-app/next-app-docker/web-frontend:$SHORT_SHA',
+        '-t',
+        'asia-southeast1-docker.pkg.dev/$PROJECT_ID/next-app-docker/next-frontend:$COMMIT_SHA',
         '.'
       ]
 
-  # Step 2: Push image lên Artifact Registry
+  # 2. Push Docker image lên Artifact Registry
   - name: 'gcr.io/cloud-builders/docker'
     args:
       [
         'push',
-        'asia-southeast1-docker.pkg.dev/deploy-next-app/next-app-docker/web-frontend:$SHORT_SHA'
+        'asia-southeast1-docker.pkg.dev/$PROJECT_ID/next-app-docker/next-frontend:$COMMIT_SHA'
       ]
 
-# Optional: Đặt "latest" tag để dễ deploy (ngoài tag commit hash)
-  - name: 'gcr.io/cloud-builders/docker'
+  # 3. Triển khai lên GKE (cập nhật image trong Deployment)
+  - name: 'gcr.io/cloud-builders/kubectl'
     args:
       [
-        'tag',
-        'asia-southeast1-docker.pkg.dev/deploy-next-app/next-app-docker/web-frontend:$SHORT_SHA',
-        'asia-southeast1-docker.pkg.dev/deploy-next-app/next-app-docker/web-frontend:latest'
+        'set',
+        'image',
+        'deployment/nextjs-app-project',
+        'web=asia-southeast1-docker.pkg.dev/$PROJECT_ID/next-app-docker/next-frontend:$COMMIT_SHA'
       ]
-  - name: 'gcr.io/cloud-builders/docker'
-    args:
-      [
-        'push',
-        'asia-southeast1-docker.pkg.dev/deploy-next-app/next-app-docker/web-frontend:latest'
-      ]
+    env:
+      - 'CLOUDSDK_COMPUTE_REGION=asia-southeast1'
+      - 'CLOUDSDK_CONTAINER_CLUSTER=autopilot-cluster-1'
 
-# Output image list (hiển thị trong log)
-images:
-  - 'asia-southeast1-docker.pkg.dev/deploy-next-app/next-app-docker/web-frontend:$SHORT_SHA'
-  - 'asia-southeast1-docker.pkg.dev/deploy-next-app/next-app-docker/web-frontend:latest'
+# Cho phép dùng biến môi trường động
+options:
+  substitutionOption: ALLOW_LOOSE
+  defaultLogsBucketBehavior: REGIONAL_USER_OWNED_BUCKET
+
+# Substitutions mặc định (nếu chạy thủ công)
+substitutions:
+  _REGION: 'asia-southeast1'
+  _REPOSITORY: 'next-app-docker'
+  _IMAGE: 'next-frontend'
