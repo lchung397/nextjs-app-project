@@ -4,23 +4,35 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
+    "dev:staging": "env-cmd -f .env.staging next dev",
+    "dev:production": "env-cmd -f .env.production next dev",
     "build": "next build",
+    "build:staging": "env-cmd -f .env.staging next build",
+    "build:production": "env-cmd -f .env.production next build",
     "start": "next start",
+    "start:staging": "env-cmd -f .env.staging next start",
+    "start:production": "env-cmd -f .env.production next start",
+    "env:dev": "bash scripts/switch-env.sh development",
+    "env:staging": "bash scripts/switch-env.sh staging",
+    "env:prod": "bash scripts/switch-env.sh production",
     "lint": "eslint"
   },
   "dependencies": {
-    "react": "19.2.0",
-    "react-dom": "19.2.0",
-    "next": "16.0.1"
+    "antd": "^5.28.0",
+    "axios": "^1.13.2",
+    "next": "15.1.6",
+    "react": "18.3.1",
+    "react-dom": "18.3.1"
   },
   "devDependencies": {
-    "typescript": "^5",
-    "@types/node": "^20",
-    "@types/react": "^19",
-    "@types/react-dom": "^19",
     "@tailwindcss/postcss": "^4",
-    "tailwindcss": "^4",
+    "@types/node": "^20",
+    "@types/react": "^18.3.12",
+    "@types/react-dom": "^18.3.1",
+    "env-cmd": "^11.0.0",
     "eslint": "^9",
-    "eslint-config-next": "16.0.1"
+    "eslint-config-next": "16.0.1",
+    "tailwindcss": "^4",
+    "typescript": "^5"
   }
 }
