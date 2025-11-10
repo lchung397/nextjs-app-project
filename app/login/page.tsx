@@ -1,10 +1,11 @@
-'use client';
+"use client";
 
-import { useState } from 'react';
-import { useRouter } from 'next/navigation';
-import { Form, Input, Button, Checkbox, message } from 'antd';
-import { AuthService, type SignInData } from '@/lib/api';
-import Link from 'next/link';
+import { useState } from "react";
+import { useRouter } from "next/navigation";
+import { Form, Input, Button, Checkbox, message } from "antd";
+import { AuthService, type SignInData } from "@/lib/api";
+import Link from "next/link";
+import { AxiosError } from "axios";
 
 export default function LoginPage() {
   const [loading, setLoading] = useState(false);
@@ -15,10 +16,11 @@ export default function LoginPage() {
       setLoading(true);
       const response = await AuthService.signIn(values);
       AuthService.saveToken(response.access_token);
-      message.success('Login successful!');
-      router.push('/dashboard');
-    } catch (error: any) {
-      message.error(error.response?.data?.message || 'Login failed');
+      message.success("Login successful!");
+      router.push("/dashboard");
+    } catch (error: unknown) {
+      const err = error as AxiosError<{ message: string }>;
+      message.error(err.response?.data?.message || "Login failed");
     } finally {
       setLoading(false);
     }
@@ -28,8 +30,8 @@ export default function LoginPage() {
     <div className="flex h-screen overflow-hidden relative">
       {/* Background Image for Mobile */}
       <div className="absolute inset-0 z-0 hidden md:hidden mobile-bg">
-        <img 
-          src="/login.png" 
+        <img
+          src="/login.png"
           alt="Background"
           className="w-full h-full object-cover blur-[8px]"
         />
@@ -55,11 +57,11 @@ export default function LoginPage() {
               label={<span className="text-black">User name</span>}
               name="email"
               rules={[
-                { required: true, message: 'Please enter your email!' },
-                { type: 'email', message: 'Invalid email!' }
+                { required: true, message: "Please enter your email!" },
+                { type: "email", message: "Invalid email!" },
               ]}
             >
-              <Input 
+              <Input
                 placeholder="Enter your username"
                 className="h-[45px] rounded-lg border-gray-300"
               />
@@ -68,9 +70,11 @@ export default function LoginPage() {
             <Form.Item
               label={<span className="text-black">Password</span>}
               name="password"
-              rules={[{ required: true, message: 'Please enter your password!' }]}
+              rules={[
+                { required: true, message: "Please enter your password!" },
+              ]}
             >
-              <Input.Password 
+              <Input.Password
                 placeholder="Enter your password"
                 className="h-[45px] rounded-lg border-gray-300"
               />
@@ -93,9 +97,7 @@ export default function LoginPage() {
               Login
             </Button>
 
-            <div className="text-center text-gray-400 mb-5 text-sm">
-              Or
-            </div>
+            <div className="text-center text-gray-400 mb-5 text-sm">Or</div>
 
             <div className="flex gap-3 mb-8">
               <Button
@@ -114,7 +116,10 @@ export default function LoginPage() {
 
             <div className="text-center text-sm">
               <span className="text-gray-600">Don`t have an account? </span>
-              <Link href="/signup" className="text-[#00b4a8] font-medium hover:underline">
+              <Link
+                href="/signup"
+                className="text-[#00b4a8] font-medium hover:underline"
+              >
                 Sign Up
               </Link>
             </div>
@@ -124,8 +129,8 @@ export default function LoginPage() {
 
       {/* Right side - Image */}
       <div className="hidden md:flex flex-1 bg-gray-100 items-center justify-center relative overflow-hidden">
-        <img 
-          src="/login.png" 
+        <img
+          src="/login.png"
           alt="Login illustration"
           className="w-full h-full object-cover"
         />

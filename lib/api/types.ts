@@ -1,6 +1,6 @@
 // Định nghĩa các types cho API responses
 
-export interface ApiResponse<T = any> {
+export interface ApiResponse<T = unknown> {
   data: T;
   message?: string;
   status?: number;

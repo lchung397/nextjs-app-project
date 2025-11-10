@@ -1,6 +1,6 @@
 import { apiClient } from '../config';
 
-export interface SignUpData {
+export interface IUser {
   email: string;
   password: string;
   name: string;
@@ -34,7 +34,7 @@ export class AuthService {
   /**
    * Đăng ký user mới
    */
-  static async signUp(data: SignUpData): Promise<AuthResponse> {
+  static async signUp(data: IUser): Promise<AuthResponse> {
     const response = await apiClient.post<AuthResponse>('/auth/signup', data);
     return response.data;
   }
