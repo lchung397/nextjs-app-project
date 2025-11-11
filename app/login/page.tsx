@@ -29,7 +29,6 @@ export default function LoginPage() {
 
   return (
     <div className="flex h-screen overflow-hidden relative">
-      {/* Background Image for Mobile */}
       <div className="absolute inset-0 z-0 hidden md:hidden mobile-bg">
         <img
           src="/login.png"
@@ -38,7 +37,6 @@ export default function LoginPage() {
         />
       </div>
 
-      {/* Left side - Form */}
       <div className="flex-1 flex items-center justify-center px-5 py-10 md:px-10 bg-white relative z-10 overflow-y-auto md:bg-white/95 md:backdrop-blur-[10px] md:rounded-[20px] md:m-5 md:shadow-[0_8px_32px_rgba(0,0,0,0.1)]">
         <div className="w-full max-w-[400px]">
           <h1 className="text-[32px] font-bold mb-2 text-black">
@@ -139,7 +137,6 @@ export default function LoginPage() {
         </div>
       </div>
 
-      {/* Right side - Image */}
       <div className="hidden md:flex flex-1 bg-gray-100 items-center justify-center relative overflow-hidden">
         <img
           src="/login.png"
