@@ -2,25 +2,26 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { Form, Input, Button, Checkbox, message } from "antd";
+import { Form, Input, Button, Checkbox, Alert } from "antd";
 import { AuthService, type SignInData } from "@/lib/api";
 import Link from "next/link";
 import { AxiosError } from "axios";
 
 export default function LoginPage() {
   const [loading, setLoading] = useState(false);
+  const [errorMessage, setErrorMessage] = useState<string>("");
   const router = useRouter();
 
   const handleLogin = async (values: SignInData) => {
     try {
       setLoading(true);
+      setErrorMessage("");
       const response = await AuthService.signIn(values);
       AuthService.saveToken(response.access_token);
-      message.success("Login successful!");
       router.push("/dashboard");
     } catch (error: unknown) {
       const err = error as AxiosError<{ message: string }>;
-      message.error(err.response?.data?.message || "Login failed");
+      setErrorMessage(err.response?.data?.message || "Login failed. Please check your credentials and try again.");
     } finally {
       setLoading(false);
     }
@@ -96,6 +97,17 @@ export default function LoginPage() {
             >
               Login
             </Button>
+
+            {errorMessage && (
+              <Alert
+                message={errorMessage}
+                type="error"
+                showIcon
+                closable
+                onClose={() => setErrorMessage("")}
+                className="mb-5"
+              />
+            )}
 
             <div className="text-center text-gray-400 mb-5 text-sm">Or</div>
 

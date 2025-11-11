@@ -2,18 +2,20 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { Form, Input, Button, Checkbox, message } from "antd";
+import { Form, Input, Button, Checkbox, Alert } from "antd";
 import { AuthService, type IUser } from "@/lib/api";
 import Link from "next/link";
 import { AxiosError } from "axios";
 
 export default function SignUpPage() {
   const [loading, setLoading] = useState(false);
+  const [errorMessage, setErrorMessage] = useState<string>("");
   const router = useRouter();
 
   const handleSignUp = async (values: IUser) => {
     try {
       setLoading(true);
+      setErrorMessage("");
       const signUpData: IUser = {
         name: values.name,
         email: values.email,
@@ -21,11 +23,10 @@ export default function SignUpPage() {
       };
       const response = await AuthService.signUp(signUpData);
       AuthService.saveToken(response.access_token);
-      message.success("Registration successful!");
       router.push("/dashboard");
     } catch (error: unknown) {
       const err = error as AxiosError<{ message: string }>;
-      message.error(err.response?.data?.message || "Registration failed");
+      setErrorMessage(err.response?.data?.message || "Registration failed. Please try again.");
     } finally {
       setLoading(false);
     }
@@ -126,6 +127,17 @@ export default function SignUpPage() {
             >
               Signup
             </Button>
+
+            {errorMessage && (
+              <Alert
+                message={errorMessage}
+                type="error"
+                showIcon
+                closable
+                onClose={() => setErrorMessage("")}
+                className="mb-5"
+              />
+            )}
 
             <div className="text-center text-gray-400 mb-5 text-sm">Or</div>
 
